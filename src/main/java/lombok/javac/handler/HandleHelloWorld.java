@@ -2,7 +2,7 @@ package lombok.javac.handler;
 
 import java.lang.reflect.Modifier;
 
-import com.sun.tools.javac.code.TypeTags;
+import com.sun.tools.javac.code.TypeTag;
 import lombok.HelloWorld;
 import lombok.core.AnnotationValues;
 import lombok.javac.JavacAnnotationHandler;
@@ -49,28 +49,27 @@ public class HandleHelloWorld implements JavacAnnotationHandler<HelloWorld> {
         JCClassDecl typeDecl = null;
         if (typeNode.get() instanceof JCClassDecl) typeDecl = (JCClassDecl) typeNode.get();
         long flags = typeDecl == null ? 0 : typeDecl.mods.flags;
-        boolean notAClass = typeDecl == null ||
+        return typeDecl == null ||
                 (flags & (Flags.INTERFACE | Flags.ENUM | Flags.ANNOTATION)) != 0;
-        return notAClass;
     }
 
     private JCMethodDecl createHelloWorld(JavacNode type) {
         TreeMaker treeMaker = type.getTreeMaker();
 
         JCModifiers modifiers = treeMaker.Modifiers(Modifier.PUBLIC);
-        List<JCTypeParameter> methodGenericTypes = List.<JCTypeParameter>nil();
-        JCExpression methodType = treeMaker.TypeIdent(TypeTags.VOID);
+        List<JCTypeParameter> methodGenericTypes = List.nil();
+        JCExpression methodType = treeMaker.TypeIdent(TypeTag.VOID);
         Name methodName = type.toName("helloWorld");
-        List<JCVariableDecl> methodParameters = List.<JCVariableDecl>nil();
-        List<JCExpression> methodThrows = List.<JCExpression>nil();
+        List<JCVariableDecl> methodParameters = List.nil();
+        List<JCExpression> methodThrows = List.nil();
 
         JCExpression printlnMethod =
                 JavacHandlerUtil.chainDots(treeMaker, type, "System", "out", "println");
-        List<JCExpression> printlnArgs = List.<JCExpression>of(treeMaker.Literal("hello world"));
+        List<JCExpression> printlnArgs = List.of(treeMaker.Literal("hello world"));
         JCMethodInvocation printlnInvocation =
-                treeMaker.Apply(List.<JCExpression>nil(), printlnMethod, printlnArgs);
+                treeMaker.Apply(List.nil(), printlnMethod, printlnArgs);
         JCBlock methodBody =
-                treeMaker.Block(0, List.<JCStatement>of(treeMaker.Exec(printlnInvocation)));
+                treeMaker.Block(0, List.of(treeMaker.Exec(printlnInvocation)));
 
         JCExpression defaultValue = null;
 
