@@ -50,26 +50,32 @@
             <version>1.0-rc2</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.olivergondza</groupId>
+            <artifactId>maven-jdk-tools-wrapper</artifactId>
+            <version>0.1</version>
+        </dependency>
     </dependencies>
 
-    <profiles>
-        <profile>
-            <id>default-tools.jar</id>
-            <activation>
-                <property>
-                    <name>java.vendor</name>
-                    <value>Sun Microsystems Inc.</value>
-                </property>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>com.sun</groupId>
-                    <artifactId>tools</artifactId>
-                    <version>1.8</version>
-                    <scope>system</scope>
-                    <systemPath>${java.home}/../lib/tools.jar</systemPath>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
+    <!--<profiles>-->
+        <!--<profile>-->
+            <!--<id>default-tools.jar</id>-->
+            <!--<activation>-->
+                <!--<property>-->
+                    <!--<name>java.vendor</name>-->
+                    <!--<value>Sun Microsystems Inc.</value>-->
+                <!--</property>-->
+            <!--</activation>-->
+            <!--<dependencies>-->
+                <!--<dependency>-->
+                    <!--<groupId>com.sun</groupId>-->
+                    <!--<artifactId>tools</artifactId>-->
+                    <!--<version>1.8</version>-->
+                    <!--<scope>system</scope>-->
+                    <!--<systemPath>${java.home}/../lib/tools.jar</systemPath>-->
+                <!--</dependency>-->
+            <!--</dependencies>-->
+        <!--</profile>-->
+    <!--</profiles>-->
 </project>
