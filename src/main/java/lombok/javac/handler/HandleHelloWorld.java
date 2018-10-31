@@ -1,6 +1,5 @@
 package lombok.javac.handler;
 
-import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.tree.JCTree.*;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Name;
@@ -14,6 +13,8 @@ import lombok.javac.handlers.JavacHandlerUtil;
 import org.mangosdk.spi.ProviderFor;
 
 import java.lang.reflect.Modifier;
+
+import static lombok.Utils.notAClass;
 
 @ProviderFor(JavacAnnotationHandler.class)
 @SuppressWarnings("restriction")
@@ -31,14 +32,6 @@ public class HandleHelloWorld extends JavacAnnotationHandler<HelloWorld> {
 
         JCMethodDecl helloWorldMethod = createHelloWorld(typeNode);
         JavacHandlerUtil.injectMethod(typeNode, helloWorldMethod);
-    }
-
-    private boolean notAClass(JavacNode typeNode) {
-        JCClassDecl typeDecl = null;
-        if (typeNode.get() instanceof JCClassDecl) typeDecl = (JCClassDecl) typeNode.get();
-        long flags = typeDecl == null ? 0 : typeDecl.mods.flags;
-        return typeDecl == null ||
-                (flags & (Flags.INTERFACE | Flags.ENUM | Flags.ANNOTATION)) != 0;
     }
 
     private JCMethodDecl createHelloWorld(JavacNode type) {
@@ -59,8 +52,6 @@ public class HandleHelloWorld extends JavacAnnotationHandler<HelloWorld> {
         JCBlock methodBody =
                 treeMaker.Block(0, List.of(treeMaker.Exec(printlnInvocation)));
 
-        JCExpression defaultValue = null;
-
         return treeMaker.MethodDef(
                 modifiers,
                 methodName,
@@ -69,7 +60,7 @@ public class HandleHelloWorld extends JavacAnnotationHandler<HelloWorld> {
                 methodParameters,
                 methodThrows,
                 methodBody,
-                defaultValue
+                null
         );
     }
 }
