@@ -1,5 +1,6 @@
 package lombok.javac.handler;
 
+import com.google.auto.service.AutoService;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.List;
@@ -12,13 +13,12 @@ import lombok.javac.JavacNode;
 import lombok.javac.JavacTreeMaker;
 import lombok.javac.handlers.HandleConstructor;
 import lombok.javac.handlers.HandleGetter;
-import org.mangosdk.spi.ProviderFor;
 
 import static com.sun.tools.javac.tree.JCTree.*;
 import static lombok.Utils.notAClass;
 import static lombok.javac.handlers.JavacHandlerUtil.*;
 
-@ProviderFor(JavacAnnotationHandler.class)
+@AutoService(JavacAnnotationHandler.class)
 @SuppressWarnings("restriction")
 public class HandleSingleton extends JavacAnnotationHandler<Singleton> {
 

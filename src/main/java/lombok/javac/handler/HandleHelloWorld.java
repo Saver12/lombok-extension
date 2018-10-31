@@ -1,5 +1,6 @@
 package lombok.javac.handler;
 
+import com.google.auto.service.AutoService;
 import com.sun.tools.javac.tree.JCTree.*;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Name;
@@ -10,13 +11,12 @@ import lombok.javac.JavacAnnotationHandler;
 import lombok.javac.JavacNode;
 import lombok.javac.JavacTreeMaker;
 import lombok.javac.handlers.JavacHandlerUtil;
-import org.mangosdk.spi.ProviderFor;
 
 import java.lang.reflect.Modifier;
 
 import static lombok.Utils.notAClass;
 
-@ProviderFor(JavacAnnotationHandler.class)
+@AutoService(JavacAnnotationHandler.class)
 @SuppressWarnings("restriction")
 public class HandleHelloWorld extends JavacAnnotationHandler<HelloWorld> {
 
