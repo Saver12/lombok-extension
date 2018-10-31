@@ -45,14 +45,38 @@ public class HandleSingleton extends JavacAnnotationHandler<Singleton> {
 
         JavacTreeMaker maker = typeNode.getTreeMaker();
         JCExpression type = chainDotsString(typeNode, typeNode.getName());
-        JCNewClass newClass = maker.NewClass(null, List.nil(), type, List.nil(), null);
-        JCVariableDecl fieldDecl = recursiveSetGeneratedBy(maker.VarDef(
+
+        JCNewClass newClass = maker.NewClass(null,
+                List.nil(),
+                type,
+                List.nil(),
+                null);
+
+        JCVariableDecl instanceVariable = maker.VarDef(
                 maker.Modifiers(Flags.PRIVATE | Flags.STATIC),
-                typeNode.toName("instance"), type, newClass), annotationNode.get(), typeNode.getContext());
+                typeNode.toName("instance"),
+                type,
+                newClass
+        );
+
+        JCVariableDecl fieldDecl = recursiveSetGeneratedBy(
+                instanceVariable,
+                annotationNode.get(),
+                typeNode.getContext()
+        );
+
         injectFieldSuppressWarnings(typeNode, fieldDecl);
 
-        new InstanceReturningConstructor().generateConstructor(typeNode, AccessLevel.PUBLIC, List.nil(), List.nil(),
-                "getInstance", HandleConstructor.SkipIfConstructorExists.YES, null, annotationNode);
+        new InstanceReturningConstructor().generateConstructor(
+                typeNode,
+                AccessLevel.PUBLIC,
+                List.nil(),
+                List.nil(),
+                "getInstance",
+                HandleConstructor.SkipIfConstructorExists.YES,
+                null,
+                annotationNode
+        );
     }
 
     public static class InstanceReturningConstructor extends HandleConstructor {
@@ -60,6 +84,7 @@ public class HandleSingleton extends JavacAnnotationHandler<Singleton> {
         @Override
         public JCMethodDecl createStaticConstructor(String name, AccessLevel level, JavacNode typeNode,
                                                     List<JavacNode> fields, JCTree source) {
+
             JavacTreeMaker maker = typeNode.getTreeMaker();
             JCClassDecl type = (JCClassDecl) typeNode.get();
             JCModifiers mods = maker.Modifiers(Flags.STATIC | toJavacModifier(level));
@@ -78,8 +103,21 @@ public class HandleSingleton extends JavacAnnotationHandler<Singleton> {
             JCReturn returnStatement = (JCReturn) new HandleGetter().createSimpleGetterBody(maker, instanceField).get(0);
             JCBlock body = maker.Block(0, List.of(returnStatement));
 
-            return recursiveSetGeneratedBy(maker.MethodDef(mods, typeNode.toName(name), maker.Ident(type.name),
-                    List.nil(), List.nil(), List.nil(), body, null), source, typeNode.getContext());
+            JCMethodDecl methodDef = maker.MethodDef(
+                    mods,
+                    typeNode.toName(name),
+                    maker.Ident(type.name),
+                    List.nil(),
+                    List.nil(),
+                    List.nil(),
+                    body,
+                    null);
+
+            return recursiveSetGeneratedBy(
+                    methodDef,
+                    source,
+                    typeNode.getContext()
+            );
         }
     }
 }
