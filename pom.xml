@@ -55,6 +55,7 @@
             <groupId>com.github.olivergondza</groupId>
             <artifactId>maven-jdk-tools-wrapper</artifactId>
             <version>0.1</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
